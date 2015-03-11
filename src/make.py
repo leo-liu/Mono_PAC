@@ -99,10 +99,11 @@ def load_range(data):
 
     for (addr, mask) in route.list:
         atom = addr >> 24
-        codelist[atom].append(addr >> 8 & 0x00FFFF)
+        codelist[atom].append(unichr(addr >> 8 & 0x00FFFF))
         masklist[atom].append(mask.bit_length() - 9)
 
-    codelist = json.dumps(codelist, separators=(',', ':')).replace('[]','0')
+    codelist = json.dumps(codelist, separators=(',', ':'), ensure_ascii=False)
+    codelist = codelist.replace(u'\u2028', '\u2028').replace(u'\u2029', '\u2029')
     masklist = json.dumps(masklist, separators=(',', ':')).replace('[]','0')
 
     return codelist, masklist
@@ -136,7 +137,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    payload = open('mono.min.js').read()
+    payload = open('mono.js').read()
 
     proxylist = '"{}"'.format(args.proxylist)
     whitelist = load_domain(args.whitelist.read())
@@ -149,7 +150,7 @@ def main():
     payload = payload.replace('__codeList__', codelist)
     payload = payload.replace('__maskList__', masklist)
 
-    args.output.write(payload)
+    args.output.write(payload.encode('utf-16-le'))
 
 if __name__ == '__main__':
     main()

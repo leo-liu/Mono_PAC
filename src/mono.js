@@ -50,14 +50,14 @@ function FindProxyForURL(url, host) {
 
     while (min + 1 < max) {
         var mid = (min + max) >> 1;
-        if (codeHash[mid] > code) {
+        if (codeHash[mid].charCodeAt(0) > code) {
             max = mid;
         } else {
             min = mid;
         }
     }
 
-    if (code - codeHash[min] >> maskHash[min] === 0) {
+    if (code - codeHash[min].charCodeAt(0) >> maskHash[min] === 0) {
         return direct;
     }
 
