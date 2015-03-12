@@ -7,6 +7,6 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
-console.log('var codeList = "' + lzString.compress(fs.readFileSync(process.argv[2], {
+console.log('var codeList = \'' + lzString.compressToUTF16(fs.readFileSync(process.argv[2], {
   encoding: 'utf8',
-})) + '";');
+})) + '\';');

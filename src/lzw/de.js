@@ -1,7 +1,7 @@
 function decompress(compressed) {
   var length = compressed.length;
   var resetValue = 32768;
-  var getNextValue = function(index) { return compressed.charCodeAt(index);
+  var getNextValue = function(index) { return compressed.charCodeAt(index);}
   var dictionary = [],
       next,
       enlargeIn = 4,
@@ -149,7 +149,6 @@ function decompress(compressed) {
     }
     result += entry;
 
-    // Add w+entry[0] to the dictionary.
     dictionary[dictSize++] = w + entry[0];
     enlargeIn--;
 
