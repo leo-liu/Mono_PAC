@@ -94,17 +94,17 @@ def load_range(data):
         route.insert(line)
     route.reduce()
 
-    codelist = [[] for _ in range(256)]
-    masklist = [[] for _ in range(256)]
+    codelist = ['' for _ in range(256)]
+    masklist = ['' for _ in range(256)]
 
     for (addr, mask) in route.list:
         atom = addr >> 24
-        codelist[atom].append(unichr(addr >> 8 & 0x00FFFF))
-        masklist[atom].append(mask.bit_length() - 9)
+        codelist[atom] += unichr(addr >> 8 & 0x00FFFF)
+        masklist[atom] += hex(mask.bit_length() - 9)[2:]
 
-    codelist = json.dumps(codelist, separators=(',', ':'), ensure_ascii=False)
+    codelist = json.dumps(codelist, separators=(',', ':'), ensure_ascii=False).replace('""','0')
     codelist = codelist.replace(u'\u2028', '\u2028').replace(u'\u2029', '\u2029')
-    masklist = json.dumps(masklist, separators=(',', ':')).replace('[]','0')
+    masklist = json.dumps(masklist, separators=(',', ':')).replace('""','').replace('"10"','0')
 
     return codelist, masklist
 
@@ -150,7 +150,7 @@ def main():
     payload = payload.replace('__codeList__', codelist)
     payload = payload.replace('__maskList__', masklist)
 
-    args.output.write(payload.encode('utf-16-le'))
+    args.output.write(payload.encode('utf-8'))
 
 if __name__ == '__main__':
     main()

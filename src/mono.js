@@ -57,7 +57,13 @@ function FindProxyForURL(url, host) {
         }
     }
 
-    if (code - codeHash[min].charCodeAt(0) >> maskHash[min] === 0) {
+    if (maskHash[min] === 0) {
+        return direct;
+    } else {
+        mask = parseInt(maskHash[min], 16);
+    }
+
+    if (code - codeHash[min].charCodeAt(0) >> mask === 0) {
         return direct;
     }
 
