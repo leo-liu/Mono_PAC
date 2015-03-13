@@ -102,9 +102,12 @@ def load_range(data):
         codelist[atom] += unichr(addr >> 8 & 0x00FFFF)
         masklist[atom] += hex(mask.bit_length() - 9)[2:]
 
-    codelist = json.dumps(codelist, separators=(',', ':'), ensure_ascii=False).replace('""','0')
+    codelist = '0'.join(codelist)
+    codelist = codelist.replace(u'\u000A', '\n').replace(u'\u000D', '\r')
     codelist = codelist.replace(u'\u2028', '\u2028').replace(u'\u2029', '\u2029')
-    masklist = json.dumps(masklist, separators=(',', ':')).replace('""','').replace('"10"','0')
+    codelist = u'"{}".split("0")'.format(codelist)
+    masklist = '.'.join(masklist)
+    masklist = u'"{}".split(".")'.format(masklist)
 
     return codelist, masklist
 
@@ -137,7 +140,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    payload = open('mono.js').read()
+    payload = open('mono.js').read().decode('utf-8')
 
     proxylist = '"{}"'.format(args.proxylist)
     whitelist = load_domain(args.whitelist.read())
