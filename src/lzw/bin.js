@@ -7,6 +7,13 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
-console.log('var codeList = \'' + lzString.compressToUTF16(fs.readFileSync(process.argv[2], {
-  encoding: 'utf8',
-})) + '\';');
+r = lzString.compress(fs.readFileSync(process.argv[2], {encoding: 'utf8'}));
+s = r.replace('\u2028', '\\u2028');
+p = 'var codeList = \'' + s + '\';'
+
+fs.writeFileSync('bbb.js', p, {encoding: 'utf8'});
+
+
+/*for (var i = r.length - 1; i >= 0; i--) {
+    console.log(r[i].charCodeAt(0).toString(16));
+}*/
