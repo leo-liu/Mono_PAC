@@ -4,8 +4,14 @@
  */
 var tunnel = __proxyList__;
 var direct = "DIRECT";
-var whiteList = __whiteList__;
-var blackList = __blackList__;
+var whiteList = __whiteList__.split('|').reduce(function(obj, key) {
+    obj[key] = 1;
+    return obj;
+}, {});
+var blackList = __blackList__.split('|').reduce(function(obj, key) {
+    obj[key] = 1;
+    return obj;
+}, {});
 var codeList = __codeList__;
 var maskList = __maskList__;
 
