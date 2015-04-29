@@ -4,6 +4,10 @@ import argparse
 import json
 import sys
 
+def ip2str(ip):
+    return '{}.{}.{}.{}'.format(
+            ip>>24 & 0xff, ip>>16 & 0xff, ip>>8 & 0xff, ip & 0xff)
+
 class DomainTree(object):
     def __init__(self, name=''):
         self.name = name
@@ -52,12 +56,7 @@ class RouteChain(object):
         self.reduce()
         line = []
         for (addr, mask) in self.list:
-            line.append('{}.{}.{}.{}/{}'.format(
-                (addr >> 24) % 256,
-                (addr >> 16) % 256,
-                (addr >>  8) % 256,
-                (addr >>  0) % 256,
-                (33 - mask.bit_length())))
+            line.append('{}/{}'.format(ip2str(addr), (33 - mask.bit_length())))
         return '\n'.join(line)
 
     def __iter__(self):
@@ -120,9 +119,10 @@ def load_range(data):
     masklist = [[] for _ in range(256)]
 
     for (addr, mask) in route:
+        # print('{:15s} -- {:15s}'.format(ip2str(addr), ip2str(addr+mask-1)))
         atom = addr >> 24
-        codelist[atom].append(addr >> 8 & 0x00FFFF)
-        masklist[atom].append(mask.bit_length() - 9)
+        codelist[atom].append(addr & 0xFFFFFF)
+        masklist[atom].append(mask)
 
     codelist = json.dumps(codelist, separators=(',', ':')).replace('[]','0')
     masklist = json.dumps(masklist, separators=(',', ':')).replace('[]','0')

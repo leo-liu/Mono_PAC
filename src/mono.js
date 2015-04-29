@@ -37,7 +37,7 @@ function FindProxyForURL(url, host) {
     if (IP.indexOf(":") >= 0) return direct;
     var atom = IP.split(".");
 
-    var code = ((atom[1] & 0xff) << 8) | ((atom[2] & 0xff));
+    var code = (atom[1] & 0xff) << 16 | (atom[2] & 0xff) << 8 | atom[3] & 0xff;
     var hash = atom[0];
 
     var codeHash = codeList[hash];
@@ -59,7 +59,8 @@ function FindProxyForURL(url, host) {
         }
     }
 
-    if (code - codeHash[min] >> maskHash[min] === 0) {
+	// alert(IP + " " + code + " " + codeHash[min] + "--" + (codeHash[min] + maskHash[min]))
+    if (codeHash[min] <= code && code < codeHash[min] + maskHash[min]) {
         return direct;
     }
 
