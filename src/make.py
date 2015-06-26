@@ -158,7 +158,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    payload = open('mono.min.js').read()
+    payload = open('mono.js').read()
 
     proxylist = '"{}"'.format(args.proxylist)
     whitelist = load_domain(args.whitelist.read())

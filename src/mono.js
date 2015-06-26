@@ -10,7 +10,7 @@ var codeList = __codeList__;
 var maskList = __maskList__;
 
 function FindProxyForURL(url, host) {
-    if (isPlainHostName(host)) {
+    if (url == undefined || host == undefined || isPlainHostName(host)) {
         return direct;
     }
 
